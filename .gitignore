@@ -1,6 +1,9 @@
 node_modules
+coverage
+.env*
+yarn-error*
+yarn.lock
+data
 build
-yarn-error.log
-.env
-dist
+outDir
 package-lock.json

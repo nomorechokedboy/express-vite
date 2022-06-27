@@ -10,15 +10,11 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": 12,
     "sourceType": "module"
   },
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     "camelcase": "off",
     "@typescript-eslint/naming-convention": [
       "error",
@@ -34,7 +30,17 @@
       {
         "selector": "typeLike",
         "format": ["PascalCase"]
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase"]
       }
-    ]
+    ],
+    "no-async-promise-executor": 2,
+    "no-empty-pattern": "error",
+    "no-func-assign": "error",
+    "no-obj-calls": "error",
+    "no-template-curly-in-string": "error",
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"]
   }
 }
