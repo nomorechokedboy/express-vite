@@ -2,13 +2,12 @@ import express, { Request, Response, Handler } from 'express';
 import morgan from 'morgan';
 import cors, { CorsOptions } from 'cors';
 import { PORT, MORGAN } from './config/env';
-import { Server } from 'http';
-import connectDb from './config/db';
+import { Server, createServer } from 'http';
 
 const CORS_WHITELIST = ['http://localhost:5001/'];
 
 const app = express();
-const http: Server = require('http').createServer(app);
+const http: Server = createServer(app);
 
 app.use(cors(CORS_WHITELIST as CorsOptions));
 app.use(express.json({}));

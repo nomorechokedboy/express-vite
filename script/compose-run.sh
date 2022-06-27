@@ -8,4 +8,4 @@
 # EG:
 # $ script/compose_run.sh yarn add lodash
 
-docker-compose run --rm todolist-api-fahasa-api-1 "$@"
+docker-compose run --rm slearning-api "$@"

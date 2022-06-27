@@ -1,8 +1,12 @@
 version: '3.0'
 
 services:
-  fahasa-api:
-    image: nomorechokedboy/web-project:fahasa-api-prod
+  slearning-api:
+    build: .
+    container_name: slearning-api
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules/
     environment:
       - PORT=$PORT
       - NODE_ENV=production
