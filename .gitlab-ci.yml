@@ -97,7 +97,7 @@ deploy:
   stage: deploy
   needs:
     - 'release-tag'
-    - 'release-tag'
+    - 'release-latest'
   variables:
     GIT_STRATEGY: none
   only:
