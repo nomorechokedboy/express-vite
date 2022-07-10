@@ -10,7 +10,7 @@ cache:
 
 stages:
   - install-deps
-  - lint
+  - linting
   - test
   - build
   - release
@@ -22,7 +22,7 @@ before_script:
 
 install_dependencies:
   image: node:14-alpine
-  stage: install
+  stage: install-deps
   script:
     - yarn install
 
