@@ -88,7 +88,6 @@ jest:
 build:
   stage: build
   extends: .files-changes-for-cd
-  needs: ['linting', 'jest']
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
