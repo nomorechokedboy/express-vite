@@ -20,6 +20,37 @@ before_script:
   - docker version
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
+.file-changes-for-test-lint:
+  only:
+    changes:
+      - '**/*.{ts,js}'
+
+.files-changes-for-cd:
+  only:
+    changes:
+      - '**/*.{ts,js,json}'
+      - Dockerfile
+      - .gitlab-ci.yml
+      - package.json
+      - scripts/*
+
+.lints:
+  extends: .file-changes-for-test-lint
+  stage: linting
+  image: node:14-alpine
+  needs: ['install_dependencies']
+
+.tests:
+  extends: .file-changes-for-test-lint
+  image: node:14-alpine
+  stage: test
+  needs: ['install_dependencies']
+  before_script:
+    - docker-compose version
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+
 install_dependencies:
   image: node:14-alpine
   stage: install-deps
@@ -27,11 +58,10 @@ install_dependencies:
     - node -v && yarn -v
   script:
     - yarn
-
-.lints:
-  stage: linting
-  image: node:14-alpine
-  needs: ['install_dependencies']
+  only:
+    changes:
+      - '**/*.{ts,js}'
+      - package.json
 
 linting:
   extends: .lints
@@ -43,16 +73,6 @@ lint-commit-msg:
   extends: .lints
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
-
-.tests:
-  image: node:14-alpine
-  stage: test
-  needs: ['install_dependencies']
-  before_script:
-    - docker-compose version
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
 
 jest:
   extends: .tests
@@ -66,6 +86,7 @@ jest:
 
 build:
   stage: build
+  extends: .files-changes-for-cd
   needs: ['linting', 'jest']
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
@@ -73,6 +94,7 @@ build:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 .release:
+  extends: .files-changes-for-cd
   variables:
     GIT_STRATEGY: none
   stage: release
@@ -82,7 +104,8 @@ build:
 release-tag:
   extends: .release
   except:
-    - master
+    refs:
+      - main
   script:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
@@ -91,7 +114,8 @@ release-tag:
 release-latest:
   extends: .release
   only:
-    - main
+    refs:
+      - main
   script:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
@@ -104,8 +128,10 @@ deploy:
     - 'release-latest'
   variables:
     GIT_STRATEGY: none
+  extends: .files-changes-for-cd
   only:
-    - main
+    refs:
+      - main
   before_script:
     - apk update && apk add openssh-client bash
   script:
