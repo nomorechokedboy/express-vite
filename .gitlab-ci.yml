@@ -20,20 +20,6 @@ before_script:
   - docker version
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-.file-changes-for-test-lint:
-  only:
-    changes:
-      - '**/*.{ts,js}'
-
-.files-changes-for-cd:
-  only:
-    changes:
-      - '**/*.{ts,js,json}'
-      - Dockerfile
-      - .gitlab-ci.yml
-      - package.json
-      - scripts/*
-
 install_dependencies:
   image: node:14-alpine
   stage: install-deps
@@ -46,11 +32,28 @@ install_dependencies:
       - '**/*.{ts,js}'
       - package.json
 
+# .file-changes-for-test-lint:
+#   only:
+#     changes:
+#       - '**/*.{ts,js}'
+
+.files-changes-for-cd:
+  only:
+    changes:
+      - '**/*.{ts,js,json}'
+      - Dockerfile
+      - .gitlab-ci.yml
+      - package.json
+      - scripts/*
+
 .lints:
-  extends: .file-changes-for-test-lint
+  # extends: .file-changes-for-test-lint
   stage: linting
   image: node:14-alpine
   needs: ['install_dependencies']
+  only:
+    changes:
+      - '**/*.{ts,js}'
 
 linting:
   extends: .lints
@@ -64,7 +67,7 @@ lint-commit-msg:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
 .tests:
-  extends: .file-changes-for-test-lint
+  # extends: .file-changes-for-test-lint
   image: node:14-alpine
   stage: test
   needs: ['install_dependencies']
@@ -73,6 +76,9 @@ lint-commit-msg:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+  only:
+    changes:
+      - '**/*.{ts,js}'
 
 jest:
   extends: .tests
