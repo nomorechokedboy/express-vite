@@ -38,9 +38,10 @@ install_dependencies:
       - '**/*.{ts,js}'
 
 .files-changes-for-cd:
+  extends: .file-changes-for-test-lint
   only:
     changes:
-      - '**/*.{ts,js,json}'
+      - '**/*.json'
       - Dockerfile
       - .gitlab-ci.yml
       - package.json
@@ -51,9 +52,6 @@ install_dependencies:
   stage: linting
   image: node:14-alpine
   needs: ['install_dependencies']
-  # only:
-  #   changes:
-  #     - '**/*.{ts,js}'
 
 linting:
   extends: .lints
@@ -76,9 +74,6 @@ lint-commit-msg:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
-  # only:
-  #   changes:
-  #     - '**/*.{ts,js}'
 
 jest:
   extends: .tests
@@ -93,7 +88,7 @@ jest:
 build:
   stage: build
   extends: .files-changes-for-cd
-  # needs: ['linting', 'jest']
+  needs: ['linting', 'jest']
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
