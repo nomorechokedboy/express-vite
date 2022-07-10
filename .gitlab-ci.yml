@@ -30,6 +30,7 @@ install_dependencies:
 
 .lints:
   stage: linting
+  image: node:14-alpine
   needs: ['install_dependencies']
 
 linting:
@@ -44,6 +45,7 @@ lint-commit-msg:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
 .tests:
+  image: node:14-alpine
   stage: test
   needs: ['install_dependencies']
   before_script:
