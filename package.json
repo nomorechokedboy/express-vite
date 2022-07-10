@@ -13,7 +13,7 @@
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
     "lint": "eslint --ignore-path .eslintignore --ext .ts .",
-    "test": "jest --collectCoverage --detectOpenHandles",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
     "start": "nodemon ./build/index.js"
   },
   "dependencies": {
@@ -28,6 +28,8 @@
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
@@ -41,7 +43,7 @@
     "@typescript-eslint/parser": "^5.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint_d": "^12.2.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.1",
     "jest": "^28.1.1",
     "lint-staged": "^12.1.2",
     "nodemon": "^2.0.15",
@@ -53,6 +55,9 @@
     "typescript": "^4.5.3"
   },
   "lint-staged": {
-    "*": "prettier --write"
+    "*.{js,ts,json,yml,yaml}": [
+      "yarn prettier:fix",
+      "yarn lint"
+    ]
   }
 }

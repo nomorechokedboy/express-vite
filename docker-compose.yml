@@ -3,7 +3,8 @@ version: '3.0'
 services:
   slearning-api:
     build: .
-    container_name: slearning-api
+    container_name: slearning-service
+    user: '$UID_GID'
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules/
