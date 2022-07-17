@@ -32,15 +32,10 @@ install_dependencies:
       - '**/*.{ts,js}'
       - package.json
 
-.file-changes-for-test-lint:
+.files-changes:
   only:
     changes:
       - '**/*.{ts,js}'
-
-.files-changes-for-cd:
-  extends: .file-changes-for-test-lint
-  only:
-    changes:
       - '**/*.json'
       - Dockerfile
       - .gitlab-ci.yml
@@ -48,7 +43,7 @@ install_dependencies:
       - scripts/*
 
 .lints:
-  extends: .file-changes-for-test-lint
+  extends: .file-changes
   stage: linting
   # image: node:14-alpine
   needs: ['install_dependencies']
@@ -56,7 +51,7 @@ install_dependencies:
 linting:
   extends: .lints
   script:
-    - docker-compose up -d
+    - docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
     - docker-compose exec -T app yarn lint
 
 lint-commit-msg:
@@ -79,7 +74,7 @@ lint-commit-msg:
 jest:
   extends: .tests
   script:
-    - docker-compose up -d
+    - docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
     - docker-compose exec -T app yarn test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
@@ -88,14 +83,14 @@ jest:
 
 build:
   stage: build
-  extends: .files-changes-for-cd
+  extends: .files-changes
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 .release:
-  extends: .files-changes-for-cd
+  extends: .files-changes
   variables:
     GIT_STRATEGY: none
   stage: release
@@ -129,7 +124,7 @@ deploy:
     - 'release-latest'
   variables:
     GIT_STRATEGY: none
-  extends: .files-changes-for-cd
+  extends: .files-changes
   only:
     refs:
       - main

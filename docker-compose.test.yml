@@ -1,0 +1,8 @@
+version: '3.0'
+
+services:
+  slearning-api:
+    environment:
+      - PORT=3000
+      - NODE_ENV=test
+      - UID_GID=1000:1000
