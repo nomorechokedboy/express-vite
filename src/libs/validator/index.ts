@@ -1,17 +1,24 @@
-import { ObjectId, ObjectIdLike } from 'bson';
+import mongoose from 'mongoose';
 import Validator from 'validatorjs';
+
+interface ObjectIdLike {
+  id: string | Buffer;
+  __id?: string;
+  toHexString(): string;
+}
 
 type IsValidObjectIdInput =
   | string
   | number
-  | ObjectId
+  | mongoose.Types.ObjectId
   | ObjectIdLike
   | Buffer
   | Uint8Array;
 
 Validator.register(
   'ObjectId',
-  (value, _, _1) => ObjectId.isValid(value as IsValidObjectIdInput),
+  (value, _, _1) =>
+    mongoose.Types.ObjectId.isValid(value as IsValidObjectIdInput),
   'The :attribute is not ObjectId',
 );
 
