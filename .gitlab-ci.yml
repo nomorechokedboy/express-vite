@@ -20,18 +20,6 @@ before_script:
   - docker version
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-install_dependencies:
-  image: node:14-alpine
-  stage: install-deps
-  before_script:
-    - node -v && yarn -v
-  script:
-    - yarn
-  only:
-    changes:
-      - '**/*.{ts,js}'
-      - package.json
-
 .run-on-files:
   only:
     changes:
@@ -41,6 +29,15 @@ install_dependencies:
       - .gitlab-ci.yml
       - package.json
       - scripts/*
+
+install_dependencies:
+  extends: .run-on-files
+  image: node:14-alpine
+  stage: install-deps
+  before_script:
+    - node -v && yarn -v
+  script:
+    - yarn
 
 .lints:
   extends: .run-on-files
@@ -83,6 +80,9 @@ jest:
 
 build:
   stage: build
+  needs:
+    - 'linting'
+    - 'jest'
   extends: .run-on-files
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
