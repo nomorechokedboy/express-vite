@@ -65,8 +65,6 @@ build:
 
 linting:
   extends: .lints
-  needs:
-    - 'install_dependencies'
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
     # - ./script/compose-start.sh lint
@@ -76,6 +74,8 @@ linting:
 lint-commit-msg:
   extends: .lints
   image: node:14-alpine
+  needs:
+    - 'install_dependencies'
   before_script:
     - node -v && yarn -v
   script:
