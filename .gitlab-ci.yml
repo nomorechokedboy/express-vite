@@ -34,6 +34,14 @@ before_script:
       - package.json
       - scripts/*
 
+.qa-phase:
+  extends: .run-on-files
+  before_script:
+    - docker-compose version
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+
 install_dependencies:
   extends: .run-on-files
   image: node:14-alpine
@@ -52,9 +60,9 @@ build:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 .lints:
-  extends: .run-on-files
+  extends: .qa-phase
   stage: linting
-  needs: ['install_dependencies']
+  needs: ['build']
 
 linting:
   extends: .lints
@@ -73,9 +81,9 @@ lint-commit-msg:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
 .tests:
-  extends: .run-on-files
+  extends: .qa-phase
   stage: test
-  needs: ['install_dependencies']
+  needs: ['build']
   before_script:
     - docker-compose version
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
