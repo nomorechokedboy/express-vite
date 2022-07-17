@@ -52,7 +52,7 @@ linting:
   extends: .lints
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
-    - ./script/compose-start.sh lint
+    # - ./script/compose-start.sh lint
     - ls -a
     - docker-compose -f docker-compose.yml -f docker-compose.lint.yml up --abort-on-container-exit
 
@@ -78,7 +78,7 @@ jest:
   extends: .tests
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
-    - ./script/compose-start.sh test
+    # - ./script/compose-start.sh test
     - ls -a
     - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
