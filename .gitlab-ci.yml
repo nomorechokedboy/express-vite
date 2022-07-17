@@ -47,7 +47,9 @@ install_dependencies:
 linting:
   extends: .lints
   script:
-    - script/compose-start.sh lint
+    # - script/compose-start.sh lint
+    - ls -a
+    - docker-compose -f docker-compose.yml -f docker-compose.lint.yml up --abort-on-container-exit
 
 lint-commit-msg:
   extends: .lints
@@ -70,7 +72,9 @@ lint-commit-msg:
 jest:
   extends: .tests
   script:
-    - script/compose-start.sh lint
+    # - script/compose-start.sh test
+    - ls -a
+    - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
