@@ -2,6 +2,11 @@ version: '3.0'
 
 services:
   slearning-api:
-    environment:
-      NODE_ENV: lint
+    env_file:
+      - test.env
+    # environment:
+    #   - NODE_ENV=lint
+    #   - PORT=$PORT
     command: yarn lint
+    ports:
+      - '$PORT:$PORT'

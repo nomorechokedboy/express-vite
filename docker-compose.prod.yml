@@ -1,0 +1,8 @@
+version: '3.0'
+
+services:
+  slearning-api:
+    environment:
+      - NODE_ENV=production
+    ports:
+      - ${PORT}:${PORT}

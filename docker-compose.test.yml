@@ -2,6 +2,8 @@ version: '3.0'
 
 services:
   slearning-api:
+    env_file:
+      - .env.test
     environment:
       NODE_ENV: test
     command: yarn test
