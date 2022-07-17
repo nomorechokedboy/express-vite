@@ -64,8 +64,6 @@ linting:
   extends: .lints
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
-    - ls -a
-    - docker-compose -f docker-compose.yml -f docker-compose.lint.yml up --abort-on-container-exit
     - . script/compose-start.sh lint
 
 lint-commit-msg:
@@ -92,8 +90,6 @@ jest:
   extends: .tests
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
-    - ls -a
-    - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
     - . script/compose-start.sh test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
