@@ -6,3 +6,4 @@ services:
       - PORT=3000
       - NODE_ENV=test
       - UID_GID=1000:1000
+    command: yarn dev --L

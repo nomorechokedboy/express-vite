@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '../custom';
 
-export const notFound = (req: Request, res: Response) => {
+export const notFound = (req: Request, res: Response): void => {
   res.status(404);
   res.json({
     error: 'Not found',
@@ -14,7 +14,7 @@ export const errorHandler = (
   _: Request,
   res: Response,
   _1: NextFunction,
-) => {
+): Response => {
   if (e instanceof HttpException) {
     return res.status(e.status).json({ error: e.message });
   }
@@ -29,7 +29,7 @@ export const logErrors = (
   _: Request,
   _1: Response,
   next: NextFunction,
-) => {
+): void => {
   console.log('Server error #' + new Date().toString());
   console.error(err.stack);
 

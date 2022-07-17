@@ -16,7 +16,7 @@ export const isValidUserBody = (
   req: Request,
   _: Response,
   next: NextFunction,
-) => {
+): void => {
   const { email, password, studentId } = req.body;
   const data: User = { email, password, studentId };
 

@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   slearning-api:
-    build: .
+    image: registry.gitlab.com/nomorechokedboy/s-learning:feature-configs
     container_name: slearning-service
     user: '$UID_GID'
     volumes:

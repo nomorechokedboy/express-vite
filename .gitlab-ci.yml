@@ -42,14 +42,13 @@ install_dependencies:
 .lints:
   extends: .run-on-files
   stage: linting
-  # image: node:14-alpine
   needs: ['install_dependencies']
 
 linting:
   extends: .lints
   script:
     - docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
-    - docker-compose exec -T app yarn lint
+    - docker-compose exec -T slearning-api yarn lint
 
 lint-commit-msg:
   extends: .lints
@@ -61,7 +60,6 @@ lint-commit-msg:
 
 .tests:
   extends: .run-on-files
-  # image: node:14-alpine
   stage: test
   needs: ['install_dependencies']
   before_script:
@@ -74,7 +72,7 @@ jest:
   extends: .tests
   script:
     - docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d
-    - docker-compose exec -T app yarn test
+    - docker-compose exec -T slearning-api yarn test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:

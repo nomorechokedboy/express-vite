@@ -13,7 +13,9 @@
     //   "."
     // @typesultiple folders to be treated as one when resolving modules. */,
     "typeRoots": ["./src/types", "./node_modules/@types"],
-    "types": [] /* Specify type package names to be included without being referenced in a source file. */,
+    "types": [
+      "jest"
+    ] /* Specify type package names to be included without being referenced in a source file. */,
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
     "strict": true /* Enable all strict type-checking options. */,
@@ -23,6 +25,7 @@
     "noUnusedParameters": true /* Raise an error when a function parameter isn't read */,
     "noFallthroughCasesInSwitch": true /* Enable error reporting for fallthrough cases in switch statements. */,
     "allowUnusedLabels": true /* Disable error reporting for unused labels. */,
+    "noImplicitAny": true,
 
     "resolveJsonModule": true,
 
