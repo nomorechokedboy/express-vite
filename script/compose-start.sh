@@ -16,9 +16,11 @@ case "$environment" in
         ;;
      
     test)
-        docker-compose -f docker-compose.yml -f docker-compose.test.yml up
+        docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
         ;;
-     
+    lint)
+        docker-compose -f docker-compose.yml -f docker-compose.lint.yml up --abort-on-container-exit
+        ;;
     *)
         docker-compose -f docker-compose.yml up
 esac

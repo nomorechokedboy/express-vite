@@ -9,7 +9,6 @@ services:
       - ./:/usr/src/app
       - /usr/src/app/node_modules/
     environment:
-      - PORT=$PORT
       - NODE_ENV=production
     ports:
       - ${PORT}:${PORT}

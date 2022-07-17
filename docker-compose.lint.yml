@@ -3,5 +3,5 @@ version: '3.0'
 services:
   slearning-api:
     environment:
-      NODE_ENV: test
-    command: yarn test
+      NODE_ENV: lint
+    command: yarn lint
