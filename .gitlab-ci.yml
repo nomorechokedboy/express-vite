@@ -54,6 +54,8 @@ linting:
 lint-commit-msg:
   extends: .lints
   image: node:14-alpine
+  before_script:
+    - node -v && yarn -v
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
