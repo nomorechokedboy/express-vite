@@ -32,7 +32,7 @@ install_dependencies:
       - '**/*.{ts,js}'
       - package.json
 
-.files-changes:
+.run-on-files:
   only:
     changes:
       - '**/*.{ts,js}'
@@ -43,7 +43,7 @@ install_dependencies:
       - scripts/*
 
 .lints:
-  extends: .file-changes
+  extends: run-on-files.
   stage: linting
   # image: node:14-alpine
   needs: ['install_dependencies']
@@ -61,7 +61,7 @@ lint-commit-msg:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
 .tests:
-  extends: .file-changes-for-test-lint
+  extends: run-on-files.
   # image: node:14-alpine
   stage: test
   needs: ['install_dependencies']
@@ -83,14 +83,14 @@ jest:
 
 build:
   stage: build
-  extends: .files-changes
+  extends: run-on-files.
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 .release:
-  extends: .files-changes
+  extends: run-on-files.
   variables:
     GIT_STRATEGY: none
   stage: release
@@ -124,7 +124,7 @@ deploy:
     - 'release-latest'
   variables:
     GIT_STRATEGY: none
-  extends: .files-changes
+  extends: run-on-files.
   only:
     refs:
       - main
