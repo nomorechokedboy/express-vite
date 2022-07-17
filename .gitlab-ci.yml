@@ -14,9 +14,9 @@ cache:
 
 stages:
   - install-deps
+  - build
   - linting
   - test
-  - build
   - release
   - deploy
 
@@ -42,6 +42,14 @@ install_dependencies:
     - node -v && yarn -v
   script:
     - yarn
+
+build:
+  stage: build
+  extends: .run-on-files
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 .lints:
   extends: .run-on-files
@@ -86,24 +94,14 @@ jest:
     paths:
       - coverage/
 
-build:
-  stage: build
-  needs:
-    - 'linting'
-    - 'jest'
-  extends: .run-on-files
-  script:
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-
 .release:
   extends: .run-on-files
   variables:
     GIT_STRATEGY: none
   stage: release
   needs:
-    - 'build'
+    - 'jest'
+    - 'linting'
 
 release-tag:
   extends: .release
@@ -128,7 +126,6 @@ release-latest:
 deploy:
   stage: deploy
   needs:
-    - 'release-tag'
     - 'release-latest'
   variables:
     GIT_STRATEGY: none
