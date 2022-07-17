@@ -13,7 +13,6 @@ cache:
     - node_modules/
 
 stages:
-  - install-deps
   - build
   - linting
   - test
@@ -45,7 +44,7 @@ before_script:
 install_dependencies:
   extends: .run-on-files
   image: node:14-alpine
-  stage: install-deps
+  stage: build
   before_script:
     - node -v && yarn -v
   script:
@@ -66,6 +65,8 @@ build:
 
 linting:
   extends: .lints
+  needs:
+    - 'install_dependencies'
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
     # - ./script/compose-start.sh lint
