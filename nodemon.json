@@ -1,4 +1,7 @@
 {
-  "ext": "ts js json",
-  "ignore": ["*.test.js", "node_modules/*"]
+  "ignore": ["*.test.js", "node_modules/*"],
+  "ext": "ts,mjs,js,json,graphql",
+  "exec": "etsc && yarn start",
+  "legacyWatch": true,
+  "watch": ["src"]
 }

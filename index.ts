@@ -1,1 +1,2 @@
-require('./src');
+import 'tsconfig-paths/';
+import './src';
