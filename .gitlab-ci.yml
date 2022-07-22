@@ -84,7 +84,6 @@ lint-commit-msg:
     - 'install_dependencies'
   before_script:
     - node -v && yarn -v
-    - ls node_modules/@commitlint/config-conventional
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
