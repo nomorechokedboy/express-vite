@@ -47,7 +47,7 @@ install_dependencies:
   before_script:
     - node -v && yarn -v
   script:
-    - yarn --frozen-lockfile
+    - yarn
 
 .build:
   stage: build
