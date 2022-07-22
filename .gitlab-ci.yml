@@ -29,6 +29,7 @@ before_script:
       - '**/*.{ts,js}'
       - '**/*.json'
       - Dockerfile
+      - Dockerfile.dev
       - .gitlab-ci.yml
       - package.json
       - scripts/*
@@ -48,13 +49,23 @@ install_dependencies:
   script:
     - yarn
 
-build:
+.build:
   stage: build
   extends: .run-on-files
+
+build:
+  extends: .build
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+build_test:
+  extends: .build
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:dev || true
+    - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:dev --tag $CI_REGISTRY_IMAGE:CI_COMMIT_SHA-dev -f Dockerfile.dev .
+    - docker push $CI_REGISTRY_IMAGE:CI_COMMIT_SHA-dev
 
 .lints:
   stage: linting
@@ -97,7 +108,6 @@ jest:
       - coverage/
 
 .release:
-  # extends: .run-on-files
   variables:
     GIT_STRATEGY: none
   stage: release
@@ -125,6 +135,13 @@ release-latest:
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
 
+release-dev:
+  extends: .release
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:dev
+    - docker push $CI_REGISTRY_IMAGE:dev
+
 pages:
   stage: deploy
   needs:
@@ -146,7 +163,6 @@ deploy:
     - 'release-latest'
   variables:
     GIT_STRATEGY: none
-  # extends: .run-on-files
   only:
     refs:
       - main

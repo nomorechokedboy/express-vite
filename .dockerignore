@@ -8,7 +8,7 @@ coverage
 .npm
 dist
 .vscode
-Dockerfile
+Dockerfile*
 *docker-compose*
 logs
 *.log

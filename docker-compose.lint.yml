@@ -2,6 +2,7 @@ version: '3.0'
 
 services:
   slearning-api:
+    image: registry.gitlab.com/nomorechokedboy/s-learning:dev
+    environment:
+      - NODE_ENV=lint
     command: yarn lint
-    ports:
-      - '$PORT:$PORT'
