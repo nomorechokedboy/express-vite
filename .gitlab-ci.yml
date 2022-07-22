@@ -47,7 +47,7 @@ install_dependencies:
   before_script:
     - node -v && yarn -v
   script:
-    - yarn
+    - yarn --frozen-lockfile
 
 .build:
   stage: build
@@ -84,7 +84,7 @@ lint-commit-msg:
     - 'install_dependencies'
   before_script:
     - node -v && yarn -v
-    - ls
+    - ls node_modules/@commitlint/config-conventional
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
 
