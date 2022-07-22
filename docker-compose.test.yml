@@ -2,7 +2,10 @@ version: '3.0'
 
 services:
   slearning-api:
-    image: registry.gitlab.com/nomorechokedboy/s-learning:dev
+    container_name: slearning-test
+    command: yarn test
     environment:
       NODE_ENV: test
-    command: yarn test
+    volumes:
+      - /usr/src/app/node_modules
+      - ./:/usr/src/app

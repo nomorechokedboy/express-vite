@@ -29,7 +29,7 @@ before_script:
       - '**/*.{ts,js}'
       - '**/*.json'
       - Dockerfile
-      - Dockerfile.dev
+      - prod/*
       - .gitlab-ci.yml
       - package.json
       - scripts/*
@@ -38,8 +38,8 @@ before_script:
   before_script:
     - docker-compose version
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev $CI_REGISTRY_IMAGE:dev
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa $CI_REGISTRY_IMAGE:qa
 
 install_dependencies:
   image: node:14-alpine
@@ -57,15 +57,26 @@ build:
   extends: .build
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - >
+      DOCKER_BUILDKIT=1 docker build
+      --build-arg BUILDKIT_INLINE_CACHE=1 
+      --cache-from $CI_REGISTRY_IMAGE:latest 
+      -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA 
+      -f ./prod/Dockerfile 
+      .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 build_test:
   extends: .build
   script:
-    - docker pull $CI_REGISTRY_IMAGE:dev || true
-    - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE:dev --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev -f Dockerfile.dev .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev
+    - docker pull $CI_REGISTRY_IMAGE:qa || true
+    - >
+      DOCKER_BUILDKIT=1 docker build 
+      --build-arg BUILDKIT_INLINE_CACHE=1 
+      --cache-from $CI_REGISTRY_IMAGE:qa 
+      -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa 
+      .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa
 
 .lints:
   stage: linting
@@ -130,12 +141,12 @@ release-latest:
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
 
-release-dev:
+release-qa:
   extends: .release
   script:
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-dev $CI_REGISTRY_IMAGE:dev
-    - docker push $CI_REGISTRY_IMAGE:dev
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa $CI_REGISTRY_IMAGE:CI_COMMIT_REF_SLUG-qa
+    - docker push $CI_REGISTRY_IMAGE:CI_COMMIT_REF_SLUG-qa
 
 pages:
   stage: deploy

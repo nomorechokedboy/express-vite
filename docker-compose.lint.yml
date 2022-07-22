@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   slearning-api:
-    image: registry.gitlab.com/nomorechokedboy/s-learning:dev
+    container_name: slearning-lint
     environment:
       - NODE_ENV=lint
     command: yarn lint

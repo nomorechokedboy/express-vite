@@ -11,9 +11,9 @@
 environment=$1
 
 case "$environment" in
-    dev)
-        docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
-        ;;
+    # dev)
+    #     docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+    #     ;;
      
     test)
         docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
