@@ -66,7 +66,7 @@ build:
       .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
-build_test:
+build_qa:
   extends: .build
   script:
     - docker pull $CI_REGISTRY_IMAGE:qa || true
@@ -101,7 +101,7 @@ lint-commit-msg:
 .tests:
   extends: .qa-phase
   stage: test
-  needs: ['build']
+  needs: ['build_qa']
 
 jest:
   extends: .tests
@@ -120,6 +120,7 @@ jest:
   needs:
     - 'jest'
     - 'linting'
+    - 'build'
 
 release-tag:
   extends: .release
