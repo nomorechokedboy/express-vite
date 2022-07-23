@@ -1,7 +1,11 @@
 import { HttpBody, HttpException } from '@/custom';
 import { genRefreshToken, genToken } from '@libs';
 import { NextFunction, Request, Response } from 'express';
+<<<<<<< HEAD
 import { userModel } from './model';
+=======
+import { userModel } from '.';
+>>>>>>> 660454a (feat: now can login and register)
 import bcrypt from 'bcrypt';
 
 export const register = async (
@@ -10,8 +14,11 @@ export const register = async (
   next: NextFunction,
 ): Promise<void | Response> => {
   try {
+<<<<<<< HEAD
     if (!req.user) throw new Error('Request user is null');
 
+=======
+>>>>>>> 660454a (feat: now can login and register)
     const foundUser = await userModel.findOne({ email: req.user.email });
     if (foundUser) {
       return res.status(401).json({
@@ -43,7 +50,10 @@ export const login = async (
   next: NextFunction,
 ): Promise<void | Response> => {
   const { email, password } = req.body;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 660454a (feat: now can login and register)
   try {
     const foundUser = await userModel.findOne({ email });
 
