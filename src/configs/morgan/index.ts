@@ -5,4 +5,4 @@ morgan.format(
   '[:date[clf]] ":method :url" :status :res[content-length] - :response-time ms',
 );
 
-export { morgan };
+export const myFormat = morgan('myFormat');
