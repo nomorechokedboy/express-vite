@@ -1,7 +1,8 @@
 version: '3.0'
 services:
-  slearning-dev:
+  slearning-api:
     container_name: slearning-service-dev
+    user: '$UID_GID'
     env_file:
       - .env
     volumes:

@@ -6,3 +6,5 @@ services:
     command: yarn test
     environment:
       NODE_ENV: test
+    volumes:
+      - ./coverage:/usr/src/app/coverage
