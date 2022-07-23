@@ -89,8 +89,12 @@ lint-commit-msg:
 jest:
   extends: .tests
   script:
-    - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env && mkdir coverage
+    - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
     - . script/compose-start.sh test
+    - docker cp slearning-test:/usr/src/app/coverage/ .
+    - docker inspect slearning-test
+    - ls coverage -la
+    - ls -la
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
