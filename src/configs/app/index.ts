@@ -10,6 +10,8 @@ import { HttpException } from '@/custom';
 
 connectDb();
 
+connectDb();
+
 export const app = express();
 
 app.use(cors(corsOptions));
