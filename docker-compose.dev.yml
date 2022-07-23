@@ -1,0 +1,11 @@
+version: '3.0'
+services:
+  slearning-dev:
+    container_name: slearning-service-dev
+    env_file:
+      - .env
+    volumes:
+      - /usr/src/app/node_modules
+      - ./:/usr/src/app
+    ports:
+      - ${PORT}:${PORT}

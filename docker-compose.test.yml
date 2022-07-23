@@ -6,6 +6,3 @@ services:
     command: yarn test
     environment:
       NODE_ENV: test
-    volumes:
-      - /usr/src/app/node_modules
-      - ./:/usr/src/app
