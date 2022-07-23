@@ -1,9 +1,13 @@
+import { routerV1 } from '@/api';
+import { corsOptions } from '@/configs';
+import { MORGAN } from '../env';
+import { errorHandler, logErrors, notFound } from '@/middlewares';
 import cors from 'cors';
-import express, { Handler, Request, Response } from 'express';
-import morgan from 'morgan';
-import { routerV1 } from '../../api';
-import { errorHandler, logErrors, notFound } from '../../middlewares';
-import { corsOptions } from '../cors';
+import express, { Request, Response } from 'express';
+import { connectDb } from '../db';
+import { morgan } from '../morgan';
+
+connectDb();
 
 export const app = express();
 
@@ -15,19 +19,14 @@ app.use(
   }),
 );
 
-morgan.format(
-  'myFormat',
-  '[:date[clf]] ":method :url" :status :res[content-length] - :response-time ms',
-);
+const myFormat = morgan('myFormat');
 
-// const myFormat = morgan('myFormat');
-
-// if (MORGAN === '1') {
-app.use('/*', morgan('myFormat') as Handler);
-// }
+if (MORGAN === '1') {
+  app.use('*', myFormat);
+}
 
 app.use('/v1/api', routerV1);
-app.use('/', (_: Request, res: Response) => res.send('Hello cai dmm luon'));
+app.use('/', (_: Request, res: Response) => res.send('Hello World'));
 app.use(logErrors);
 app.use(errorHandler);
 app.use(notFound);

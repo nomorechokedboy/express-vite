@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { login, register } from './controller';
-import { isValidUserBody } from './validate';
+import { isValidLoginBody, isValidRegisterBody } from './validate';
 
 export const authRouter = Router();
 
-authRouter.post('/register', isValidUserBody, register);
-authRouter.post('/login', login);
+authRouter.post('/register', isValidRegisterBody, register);
+authRouter.post('/login', isValidLoginBody, login);

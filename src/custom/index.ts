@@ -8,7 +8,7 @@ export class HttpException extends Error {
   }
 }
 
-export interface AuthBody {
+export interface HttpBody {
   email: string;
   password: string;
   studentId: number;
