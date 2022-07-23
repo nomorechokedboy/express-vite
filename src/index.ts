@@ -1,5 +1,5 @@
 import { createServer, Server } from 'http';
-import { app, PORT } from './configs';
+import { app, NODE_ENV, PORT } from './configs';
 
 const http: Server = createServer(app);
 
@@ -8,5 +8,9 @@ http.on('error', (e: Error) => {
 });
 
 http.listen(PORT || 5000, () => {
-  console.log(`Slearning backend is running on http://localhost:${PORT}`);
+  const isDev = NODE_ENV === 'development';
+  const domain = `http${!isDev ? 's' : ''}://${
+    isDev ? 'localhost' : 'slearning.tk'
+  }`;
+  console.log(`Slearning backend is running on ${domain}:${PORT}`);
 });

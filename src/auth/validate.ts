@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Validator } from '@libs';
-import { User } from '.';
+import { User } from './entity';
 import { HttpException } from '../custom';
 
 const rule = {

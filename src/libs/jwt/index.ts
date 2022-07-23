@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { REFRESH_KEY, SECRET_KEY } from '../../configs';
+import { REFRESH_KEY, SECRET_KEY } from '@/configs';
 
 interface UserPayload {
   id: string;
