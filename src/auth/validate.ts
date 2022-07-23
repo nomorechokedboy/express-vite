@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { Validator } from '@libs';
 import { User } from './entity';
+<<<<<<< HEAD
 import { HttpBody, HttpException } from '../custom';
+=======
+import { HttpException } from '../custom';
+>>>>>>> f1c5115 (Fix coverage empty, add README and clean up import)
 
 const baseRule = {
   email: 'required|email',
