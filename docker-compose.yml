@@ -2,13 +2,8 @@ version: '3.0'
 
 services:
   slearning-api:
-    image: registry.gitlab.com/nomorechokedboy/s-learning:qa
+    image: registry.gitlab.com/slearning-system/slearning-backend:qa
     container_name: slearning-service
     user: '$UID_GID'
-    env_file:
-      - .env
     volumes:
-      - /usr/src/app/node_modules
-      - ./:/usr/src/app
-    ports:
-      - ${PORT}:${PORT}
+      - ./coverage:/usr/src/app/coverage

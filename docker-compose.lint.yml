@@ -3,6 +3,6 @@ version: '3.0'
 services:
   slearning-api:
     container_name: slearning-lint
+    command: yarn lint
     environment:
       - NODE_ENV=lint
-    command: yarn lint

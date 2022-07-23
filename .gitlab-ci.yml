@@ -6,12 +6,6 @@ services:
 variables:
   PORT: 5000
   UID_GID: 1000:1000
-  DOCKER_HOST: tcp://docker:2375
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG} # only apply for current branch
-  paths:
-    - node_modules/
 
 stages:
   - build
@@ -34,6 +28,7 @@ before_script:
       - .gitlab-ci.yml
       - package.json
       - scripts/*
+      - docker-compose*.yml
 
 .qa-phase:
   before_script:
@@ -41,14 +36,6 @@ before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa $CI_REGISTRY_IMAGE:qa
-
-install_dependencies:
-  image: node:14-alpine
-  stage: build
-  before_script:
-    - node -v && yarn -v
-  script:
-    - yarn
 
 .build:
   stage: build
@@ -79,21 +66,16 @@ build_qa:
       .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA-qa
 
-.lints:
-  stage: linting
-  needs: ['build']
-
 linting:
-  extends: .lints
+  stage: linting
+  needs: ['build_qa']
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
     - . script/compose-start.sh lint
 
 lint-commit-msg:
-  extends: .lints
+  stage: linting
   image: node:14-alpine
-  needs:
-    - 'install_dependencies'
   before_script:
     - node -v && yarn -v
   script:
@@ -107,7 +89,7 @@ lint-commit-msg:
 jest:
   extends: .tests
   script:
-    - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
+    - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env && mkdir coverage
     - . script/compose-start.sh test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
