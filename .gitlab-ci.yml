@@ -6,6 +6,7 @@ services:
 variables:
   PORT: 5000
   UID_GID: 1000:1000
+  DOCKER_HOST: tcp://docker:2375
 
 cache:
   key: ${CI_COMMIT_REF_SLUG} # only apply for current branch
