@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Validator } from '@libs';
 import { User } from './entity';
-import { HttpException } from '../custom';
+import { HttpBody, HttpException } from '../custom';
 
 const baseRule = {
   email: 'required|email',
