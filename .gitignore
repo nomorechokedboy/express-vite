@@ -1,9 +1,12 @@
 node_modules
 coverage
 .env*
-yarn-error*
-yarn.lock
+yarn*
+!yarn.lock
 data
 build
 outDir
 package-lock.json
+dist
+.npm
+npm*

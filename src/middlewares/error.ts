@@ -16,7 +16,7 @@ export const errorHandler = (
   _1: NextFunction,
 ): Response => {
   if (e instanceof HttpException) {
-    return res.status(e.status).json({ error: e.message });
+    return res.status(e.status).json({ error: JSON.parse(e.message) });
   }
 
   console.log('Not HttpException');

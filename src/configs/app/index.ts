@@ -2,7 +2,7 @@ import { routerV1 } from '@/api';
 import { corsOptions } from '@/configs';
 import { errorHandler, logErrors, notFound } from '@/middlewares';
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { connectDb } from '../db';
 import { MORGAN } from '../env';
 import { myFormat } from '../morgan';
@@ -23,10 +23,8 @@ if (MORGAN === '1') {
   app.use('/*', myFormat);
 }
 
-app.use('/v1/api', routerV1);
-app.use('/', (_: Request, res: Response) =>
-  res.json({ message: 'Hello world!' }),
-);
+app.use('/healthcheck', (_, res) => res.json({ message: 'Ok' }));
+app.use('/api', routerV1);
 app.use(logErrors);
 app.use(errorHandler);
 app.use(notFound);

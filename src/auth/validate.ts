@@ -24,7 +24,7 @@ type ExpressMiddleware = (
 
 export const isValidRegisterBody: ExpressMiddleware = (req, _, next) => {
   const { email, password, studentId } = req.body;
-  const data: User = { email, password, studentId };
+  const data: Omit<User, '_id'> = { email, password, studentId };
 
   const validation = new Validator(data, registerRule);
   if (validation.fails()) {

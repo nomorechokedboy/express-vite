@@ -3,4 +3,4 @@ import { Router } from 'express';
 
 export const routerV1 = Router();
 
-routerV1.use('/auth', authRouter);
+routerV1.use('/v1', authRouter);

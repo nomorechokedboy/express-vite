@@ -8,3 +8,5 @@ yarn.lock
 .prettierignore
 Dockerfile*
 .gitignore
+coverage
+dist

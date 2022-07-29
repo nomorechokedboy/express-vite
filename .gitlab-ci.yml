@@ -86,15 +86,12 @@ lint-commit-msg:
   stage: test
   needs: ['build_qa']
 
-jest:
+test:
   extends: .tests
   script:
     - echo 'PORT=$PORT\nUID_GID=$UID_GID' >> .env
     - . script/compose-start.sh test
     - docker cp slearning-test:/usr/src/app/coverage/ .
-    - docker inspect slearning-test
-    - ls coverage -la
-    - ls -la
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
@@ -105,7 +102,7 @@ jest:
     GIT_STRATEGY: none
   stage: release
   needs:
-    - 'jest'
+    - 'test'
     - 'linting'
     - 'build'
 
@@ -139,9 +136,9 @@ release-qa:
 pages:
   stage: deploy
   needs:
-    - jest
+    - test
   dependencies:
-    - jest
+    - test
   script:
     - mv coverage/ public/
   artifacts:
@@ -150,34 +147,33 @@ pages:
     expire_in: 30 days
   only:
     - main
+# deploy:
+#   stage: deploy
+#   needs:
+#     - 'release-latest'
+#   variables:
+#     GIT_STRATEGY: none
+#   only:
+#     refs:
+#       - main
+#   before_script:
+#     - apk update && apk add openssh-client bash
+#   script:
+#     - eval $(ssh-agent -s)
 
-deploy:
-  stage: deploy
-  needs:
-    - 'release-latest'
-  variables:
-    GIT_STRATEGY: none
-  only:
-    refs:
-      - main
-  before_script:
-    - apk update && apk add openssh-client bash
-  script:
-    - eval $(ssh-agent -s)
+#     - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
 
-    - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
+#     - mkdir -p ~/.ssh
 
-    - mkdir -p ~/.ssh
+#     - ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
 
-    - ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
+#     - chmod 644 ~/.ssh/known_hosts
 
-    - chmod 644 ~/.ssh/known_hosts
-
-    - >
-      ssh $SSH_USER@$SSH_SERVER_IP
-      "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
-      cd ${PATH_TO_PROJECT};
-      docker-compose down;
-      docker pull ${CI_REGISTRY_IMAGE}:latest;
-      docker-compose up -d;
-      docker image prune -f;"
+#     - >
+#       ssh $SSH_USER@$SSH_SERVER_IP
+#       "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
+#       cd ${PATH_TO_PROJECT};
+#       docker-compose down;
+#       docker pull ${CI_REGISTRY_IMAGE}:latest;
+#       docker-compose up -d;
+#       docker image prune -f;"

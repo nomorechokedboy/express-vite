@@ -8,5 +8,20 @@ services:
     volumes:
       - /usr/src/app/node_modules
       - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
     ports:
       - ${PORT}:${PORT}
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:${PORT}/healthcheck || exit 1
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hadius/Workspace/Nodejs/slearning-backend/node_modules
