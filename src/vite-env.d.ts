@@ -8,7 +8,6 @@ interface ImportMetaEnv {
   MORGAN: string;
   SECRET_KEY: string;
   REFRESH_KEY: string;
-  NODE_ENV: string;
 }
 
 interface ImportMeta {

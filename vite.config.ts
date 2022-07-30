@@ -7,6 +7,7 @@ import TypeCheck from 'vite-plugin-checker';
 export default ({ mode }: { mode: string }): UserConfigExport => {
   // Load app-level env vars to node-level env vars.
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+  if (!process.env.SLEARNING_SERVER_PORT) throw Error('PORT is undefined!');
 
   return defineConfig({
     // ...vite configures
@@ -15,7 +16,7 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
     },
     server: {
       // vite server configs, for details see [vite doc](https://vitejs.dev/config/#server-host)
-      port: process.env.PORT,
+      port: parseInt(process.env.SLEARNING_SERVER_PORT),
       host: true,
     },
     resolve: {
@@ -64,6 +65,12 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
       }),
       TypeCheck({
         typescript: true,
+        enableBuild: true,
+        overlay: true,
+        terminal: true,
+        eslint: {
+          lintCommand: 'eslint --ignore-path .eslintignore "./**/*.ts"',
+        },
       }),
     ],
     optimizeDeps: {
@@ -87,5 +94,6 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
         clean: true,
       },
     },
+    envPrefix: ['VITE_', 'SLEARNING_SERVER_'],
   });
 };

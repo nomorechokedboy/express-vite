@@ -1,5 +1,5 @@
 import { createServer, Server } from 'http';
-import { app, NODE_ENV, PORT } from './configs';
+import { app, PORT } from './configs';
 
 if (import.meta.env.PROD) {
   const http: Server = createServer(app);
@@ -9,18 +9,7 @@ if (import.meta.env.PROD) {
   });
 
   http.listen(PORT || 5000, () => {
-    const isDev = NODE_ENV === 'development';
-    const domain = `http${!isDev ? 's' : ''}://${
-      isDev ? 'localhost' : 'slearning.tk'
-    }`;
-
-    console.log({
-      test: import.meta.env.VITE_TEST,
-      port: import.meta.env['PORT'],
-      test1: process.env['DATABASE_URL'],
-    });
-
-    console.log(`Slearning backend is running on ${domain}:${PORT}`);
+    console.log(`Slearning backend is running on https://slearning.tk:${PORT}`);
   });
 }
 
