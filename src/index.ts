@@ -14,6 +14,12 @@ if (import.meta.env.PROD) {
       isDev ? 'localhost' : 'slearning.tk'
     }`;
 
+    console.log({
+      test: import.meta.env.VITE_TEST,
+      port: import.meta.env['PORT'],
+      test1: process.env['DATABASE_URL'],
+    });
+
     console.log(`Slearning backend is running on ${domain}:${PORT}`);
   });
 }

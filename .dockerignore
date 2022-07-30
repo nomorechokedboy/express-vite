@@ -13,11 +13,12 @@ Dockerfile*
 logs
 *.log
 npm-debug.log*
-yarn-error.log*
-yarn-debug.log*
 .husky
 .git
 data
 .commitlintrc.json
 .dockerignore
 prod
+script
+yarn*
+!yarn.lock

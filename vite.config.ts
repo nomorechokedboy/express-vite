@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { loadEnv } from 'vite';
 import { defineConfig, UserConfigExport } from 'vitest/config';
 import { VitePluginNode } from 'vite-plugin-node';
+import TypeCheck from 'vite-plugin-checker';
 
 export default ({ mode }): UserConfigExport => {
   // Load app-level env vars to node-level env vars.
@@ -60,6 +61,9 @@ export default ({ mode }): UserConfigExport => {
         // }
         // swc configs, see [swc doc](https://swc.rs/docs/configuration/swcrc)
         swcOptions: {},
+      }),
+      TypeCheck({
+        typescript: true,
       }),
     ],
     optimizeDeps: {

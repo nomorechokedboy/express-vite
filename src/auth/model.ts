@@ -1,8 +1,8 @@
-import mongoose, { model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import { User } from './entity';
 import bcrypt from 'bcrypt';
 
-const schema = new Schema<User>({
+const schema = new mongoose.Schema<User>({
   email: {
     type: String,
     minlength: 3,
@@ -21,7 +21,7 @@ const schema = new Schema<User>({
 });
 
 schema.pre<User & mongoose.Document>('save', function (next) {
-  if (this.isNew || this.isModified) {
+  if (this.isNew || this.isModified('password')) {
     const salt = bcrypt.genSaltSync(10);
     this.password = bcrypt.hashSync(this.password, salt);
   }
@@ -29,4 +29,18 @@ schema.pre<User & mongoose.Document>('save', function (next) {
   next();
 });
 
-export const userModel = model<User>('slearningUser', schema);
+// schema.pre<User & mongoose.Document>("updateOne", function (next) {
+//   if (
+//     this.update.hasOwnProperty("$set") &&
+//     this.update["$set"].hasOwnProperty("password")
+//   ) {
+//     var salt = bcrypt.genSaltSync(10);
+//     this.update["$set"].password = bcrypt.hashSync(
+//       this.update["$set"].password,
+//       salt
+//     );
+//   }
+//   next();
+// });
+
+export const userModel = mongoose.model<User>('slearningUser', schema);

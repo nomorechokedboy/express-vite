@@ -4,6 +4,7 @@ import { LoginUseCase } from '../useCases/login';
 
 export class LoginController implements Controller {
   constructor(private readonly useCase: LoginUseCase) {}
+
   async exec(
     req: Request,
     res: Response,

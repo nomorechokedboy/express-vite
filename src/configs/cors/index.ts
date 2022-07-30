@@ -1,5 +1,5 @@
 import { CorsOptions } from 'cors';
-import { PORT } from '..';
+import { PORT } from '../env';
 
 const whitelist = [
   `http://localhost:${PORT}`,

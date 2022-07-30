@@ -28,9 +28,7 @@ export const isValidRegisterBody: ExpressMiddleware = (req, _, next) => {
 
   const validation = new Validator(data, registerRule);
   if (validation.fails()) {
-    console.log(validation.errors.all());
-
-    return next(new HttpException('Validate error'));
+    return next(new HttpException(JSON.stringify(validation.errors.all())));
   }
 
   req.user = data;
@@ -39,7 +37,7 @@ export const isValidRegisterBody: ExpressMiddleware = (req, _, next) => {
 
 export const isValidLoginBody: ExpressMiddleware = (req, _, next) => {
   const { email, password } = req.body;
-  const data: Omit<User, 'studentId'> = { email, password };
+  const data: Omit<User, 'studentId' | '_id'> = { email, password };
 
   const validation = new Validator(data, baseRule);
   if (validation.fails()) {
