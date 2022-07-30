@@ -4,7 +4,7 @@ import { defineConfig, UserConfigExport } from 'vitest/config';
 import { VitePluginNode } from 'vite-plugin-node';
 import TypeCheck from 'vite-plugin-checker';
 
-export default ({ mode }): UserConfigExport => {
+export default ({ mode }: { mode: string }): UserConfigExport => {
   // Load app-level env vars to node-level env vars.
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
@@ -15,7 +15,7 @@ export default ({ mode }): UserConfigExport => {
     },
     server: {
       // vite server configs, for details see [vite doc](https://vitejs.dev/config/#server-host)
-      port: parseInt(process.env.PORT),
+      port: process.env.PORT,
       host: true,
     },
     resolve: {

@@ -12,3 +12,7 @@ export interface LoginData {
   refreshToken?: string;
   error?: string;
 }
+
+export interface AuthPayload {
+  id: string;
+}

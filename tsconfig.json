@@ -22,8 +22,8 @@
     "noUnusedLocals": true /* Enable error reporting when a local variables aren't read. */,
     "noUnusedParameters": true /* Raise an error when a function parameter isn't read */,
     "noFallthroughCasesInSwitch": true /* Enable error reporting for fallthrough cases in switch statements. */,
-    "allowUnusedLabels": true /* Disable error reporting for unused labels. */,
     "noImplicitAny": true,
+    "allowUnusedLabels": true /* Disable error reporting for unused labels. */,
 
     "resolveJsonModule": true,
 

@@ -1,16 +1,14 @@
-import { Repository } from '@/common';
+import { HashingFunction, Repository, TokenService } from '@/common';
 import { UseCase } from '@/common/interfaces/UseCase';
-import { genToken, genRefreshToken } from '@libs';
-import { LoginBody, LoginData } from '../entity';
-import { User } from '../entity';
+import { LoginBody, LoginData, User } from '../entity';
 
 export class LoginUseCase
   implements UseCase<LoginBody, LoginData | { error: string }>
 {
   constructor(
     private readonly userRepo: Repository<User>,
-    private readonly encryptService: unknown,
-    private readonly _: unknown,
+    private readonly encryptService: HashingFunction,
+    private readonly jwt: TokenService,
   ) {}
   public async exec(data: LoginBody): Promise<LoginData> {
     try {
@@ -24,8 +22,8 @@ export class LoginUseCase
       if (!match) return { error: 'Wrong password' };
 
       return {
-        accessToken: genToken({ id: foundUser.email }),
-        refreshToken: genRefreshToken({ id: foundUser.email }),
+        accessToken: this.jwt.genToken({ id: foundUser.email }),
+        refreshToken: this.jwt.genRefreshToken({ id: foundUser.email }),
       };
     } catch (e) {
       return Promise.reject(e);

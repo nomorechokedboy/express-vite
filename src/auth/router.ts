@@ -1,4 +1,4 @@
-import { ExpressHandler } from '@/adapters/ExpressHandler';
+import { Bcrypt, ExpressHandler, JwtService, MongoRepo } from '@/adapters';
 import { Router } from 'express';
 import { userModel } from './model';
 import { LoginController } from './adapter/LoginController';
@@ -7,7 +7,6 @@ import { LoginUseCase } from './useCases/login';
 import { isValidLoginBody, isValidRegisterBody } from './validate';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { MongoRepo } from '@/adapters';
 
 export const authRouter = Router();
 
@@ -18,7 +17,11 @@ authRouter.post(
   isValidLoginBody,
   ExpressHandler(
     new LoginController(
-      new LoginUseCase(new MongoRepo(userModel), bcrypt, jwt),
+      new LoginUseCase(
+        new MongoRepo(userModel),
+        new Bcrypt(bcrypt),
+        new JwtService(jwt),
+      ),
     ),
   ),
 );

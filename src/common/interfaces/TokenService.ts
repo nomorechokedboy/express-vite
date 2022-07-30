@@ -1,4 +1,6 @@
+import { AuthPayload } from '@/auth';
+
 export interface TokenService {
-  genToken(payload: unknown): string;
-  genRefreshToken(payload: unknown): string;
+  genToken(payload: AuthPayload): string;
+  genRefreshToken(payload: AuthPayload): string;
 }
