@@ -1,13 +1,11 @@
 import { resolve } from 'path';
-import { loadEnv } from 'vite';
-import { defineConfig, UserConfigExport } from 'vitest/config';
+import { defineConfig, loadEnv, UserConfigExport } from 'vite';
 import { VitePluginNode } from 'vite-plugin-node';
 import TypeCheck from 'vite-plugin-checker';
 
 export default ({ mode }: { mode: string }): UserConfigExport => {
   // Load app-level env vars to node-level env vars.
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
-  if (!process.env.SLEARNING_SERVER_PORT) throw Error('PORT is undefined!');
 
   return defineConfig({
     // ...vite configures
@@ -16,7 +14,7 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
     },
     server: {
       // vite server configs, for details see [vite doc](https://vitejs.dev/config/#server-host)
-      port: parseInt(process.env.SLEARNING_SERVER_PORT),
+      port: parseInt(process.env.SLEARNING_SERVER_PORT!),
       host: true,
     },
     resolve: {
@@ -74,25 +72,7 @@ export default ({ mode }: { mode: string }): UserConfigExport => {
       }),
     ],
     optimizeDeps: {
-      // Vite does not work well with optionnal dependencies,
-      // you can mark them as ignored for now
-      // eg: for nestjs, exlude these optional dependencies:
-      // exclude: [
-      //   '@nestjs/microservices',
-      //   '@nestjs/websockets',
-      //   'cache-manager',
-      //   'class-transformer',
-      //   'class-validator',
-      //   'fastify-swagger',
-      // ],
       exclude: ['mock-aws-s3', 'aws-sdk', 'nock'],
-    },
-    test: {
-      coverage: {
-        reporter: ['text', 'json', 'html'],
-        excludeNodeModules: true,
-        clean: true,
-      },
     },
     envPrefix: ['VITE_', 'SLEARNING_SERVER_'],
   });

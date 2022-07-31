@@ -4,15 +4,3 @@ services:
   slearning-api:
     image: registry.gitlab.com/slearning-system/slearning-backend:qa
     container_name: slearning-service
-    volumes:
-      - /usr/src/app/node_modules
-      - ./:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
-
-volumes:
-  node_modules:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/hadius/Workspace/Nodejs/slearning-backend/node_modules

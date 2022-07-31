@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { userModel } from './model';
 import { LoginController } from './adapter/LoginController';
 import { login, register } from './controller';
-import { LoginUseCase } from './useCases/login';
+import { LoginUseCase } from './useCases';
 import { isValidLoginBody, isValidRegisterBody } from './validate';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';

@@ -10,6 +10,7 @@ export class LoginUseCase
     private readonly encryptService: HashingFunction,
     private readonly jwt: TokenService,
   ) {}
+
   public async exec(data: LoginBody): Promise<LoginData> {
     try {
       const foundUser = await this.userRepo.findOne({ email: data.email });

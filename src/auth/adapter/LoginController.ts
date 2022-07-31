@@ -1,6 +1,6 @@
 import { Controller, Request, Response, NextFunction } from '@/common';
 import { HttpException } from '@/custom';
-import { LoginUseCase } from '../useCases/login';
+import { LoginUseCase } from '../useCases';
 
 export class LoginController implements Controller {
   constructor(private readonly useCase: LoginUseCase) {}

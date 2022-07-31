@@ -15,6 +15,8 @@
     "prettier:check": "prettier --check .",
     "lint": "eslint --ignore-path .eslintignore \"./**/*.ts\"",
     "test": "vitest --coverage --run",
+    "test:watch": "vitest",
+    "test:run": "vitest --run",
     "start": "node ."
   },
   "dependencies": {

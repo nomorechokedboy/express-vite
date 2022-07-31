@@ -1,7 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, test } from 'vitest';
+import request from 'supertest';
+import { app } from '../src/configs';
 
-describe('This is a dummy test suite', () => {
-  it('should always true', () => {
-    expect(1 + 2).toBe(3);
-  });
+describe.todo('Integrated testing for the hold app', () => {
+  // test('Login route', () => {
+  //   it.todo('Should return data with tokens on POST /', async () => {
+  //     // const res = await request(app).get('/healthcheck');
+  //     // expect(res.status).toBe(404);
+  //   });
+  // });
 });
